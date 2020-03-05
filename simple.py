@@ -1,3 +1,6 @@
+#Original simple animation by Daniel Hnyk
+#http://danielhnyk.cz/creating-animation-blender-using-python/
+# with edits to make it work on Blender 2.8+
 import bpy
 from mathutils import Vector
 
