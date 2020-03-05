@@ -1,7 +1,3 @@
-#Original simple animation by Daniel Hnyk
-#http://danielhnyk.cz/creating-animation-blender-using-python/
-#adjusted to work with Blender 2.80+
-
 import bpy
 from mathutils import Vector
 
@@ -14,7 +10,6 @@ scene.objects.keys() #TODO, remove?
 # when you start default Blender project, first object in scene is a Cube
 # the following line will fail if you don't have a cube.
 # You can just add it with a command bpy.ops.mesh.primitve_cube_add(location=(0,0,0))
-#kostka = scene.objects[0]
 kostka = bpy.context.visible_objects[0]
 
 # you can change location of object simply by setting the values
@@ -24,17 +19,15 @@ kostka.location = (1,2,0)
 kostka.rotation_euler = (45,0,0)
 
 # this will make object cease from current scene
-#scene.objects.unlink(kostka)
 bpy.context.collection.objects.unlink(kostka)
 
 # clear everything for now
-scene.camera = None  #TODO
+scene.camera = None  #TODO, is it necessary?
 for obj in bpy.context.visible_objects:
     bpy.context.collection.objects.unlink(obj)
 
 # create sphere and make it smooth
-#bpy.ops.mesh.primitive_uv_sphere_add(location = (2,1,2), size=0.5)
-bpy.ops.mesh.primitive_uv_sphere_add(location = (2,1,2))
+bpy.ops.mesh.primitive_uv_sphere_add(location = (2,1,2), radius=0.5)
 bpy.ops.object.shade_smooth()
 kule = bpy.context.object
 
@@ -50,8 +43,6 @@ plane.dimensions = (20,20,0)
 # for every object add material - here represented just as color
 # added 1 as the fourth channel. I bet it is transparency. It is :D
 for col, ob in zip([(1, 0, 0, 1), (0,1,0,1), (0,0,1,1)], [kule, kostka, plane]):
-    print(col)
-    print(ob)
     mat = bpy.data.materials.new("mat_" + str(ob.name))
     mat.diffuse_color = col
     ob.data.materials.append(mat)
@@ -59,13 +50,13 @@ for col, ob in zip([(1, 0, 0, 1), (0,1,0,1), (0,0,1,1)], [kule, kostka, plane]):
 # now add some light
 lamp_data = bpy.data.lights.new(name="lampa", type='POINT')
 lamp_object = bpy.data.objects.new(name="Lampicka", object_data=lamp_data)
-#scene.objects.link(lamp_object)#AGAIN, how to link?
+bpy.context.collection.objects.link(lamp_object)
 lamp_object.location = (-3, 0, 12)
 
 # and now set the camera
 cam_data = bpy.data.cameras.new(name="cam")
 cam_ob = bpy.data.objects.new(name="Kamerka", object_data=cam_data)
-#scene.objects.link(cam_ob)
+bpy.context.collection.objects.link(cam_ob)
 cam_ob.location = (-3, 0, 5)
 cam_ob.rotation_euler = (3.14/6,0,-0.3)
 cam = bpy.data.cameras[cam_data.name]
