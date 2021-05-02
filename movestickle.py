@@ -59,11 +59,11 @@ class Mooveemodel:
 
     def updatePosition(self, side):
         new_pos = self.pos + self.v * self.dt
-        self.pos = new_pos % side
+        self.pos = new_pos# % side
         is_same_panel = True if np.all(new_pos == self.pos) else False
         return self.pos, is_same_panel
 
-    def getDirection(self):
+    def getDirection(self):  
         return np.degrees(np.arctan2(self.v[1],self.v[0]))
 
 def normToOne(vallist):
@@ -85,8 +85,12 @@ def updateZwkPosition(zwk,zwks,x_home,y_home,side,mm):
 
     zwk.angle = mm.getDirection()
 
-    zwk.x_pos = int(cur_pos[0])
-    zwk.y_pos = int(cur_pos[1])
+    #zwk.x_pos = int(cur_pos[0])
+    #zwk.y_pos = int(cur_pos[1])
+
+    zwk.x_pos = cur_pos[0]
+    zwk.y_pos = cur_pos[1]
+    
     return zwk, is_same_panel
 
 """
@@ -137,29 +141,55 @@ scene = bpy.context.scene
 
 side = 10
 borders = Borders(0,0,side,side)
+
+number_of_frame = 0
+scene.frame_set(number_of_frame)
 ani = bpy.data.objects['hemingway']
+ani.rotation_mode = 'XYZ'
+ani.location=(0,0,0)
+ani.rotation_euler = (np.pi/2, 0, 0) 
+ani.keyframe_insert(data_path="location", index=-1)
+ani.keyframe_insert(data_path="rotation_euler", index=-1)
+number_of_frame += 1
+
 x_init, y_init = [side//2,side//2]
 home = [x_init, y_init]
 alf0 = Zwierzak('alf0',x_init,y_init, hue=0,sat=1)
 alfs = [alf0]
 
-number_of_frame = 0
+
 
 mu_s  = 0
-sigma_speed = 4
-sigma_angular_velocity = 0.1
-theta_speed = 0.1
-theta_angular_velocity = 0.1
+#sigma_speed = 4
+#sigma_angular_velocity = 0.1
+#theta_speed = 0.1
+#theta_angular_velocity = 0.1
+sigma_speed = 0.3
+theta_speed = 0.001
+sigma_angular_velocity = 1
+theta_angular_velocity = 0.01
+
+
 name = 'stickle'
 dirname = 'stickle'
 mm = Mooveemodel(x_init,y_init, mu_s, sigma_speed,sigma_angular_velocity,theta_speed, theta_angular_velocity)
+mm2 = Mooveemodel(x_init,y_init, mu_s, sigma_speed,sigma_angular_velocity,theta_speed, theta_angular_velocity)
 
-for it in range(50):
+
+for it in range(1,2500,10):
+    #break
     for alf in alfs:
         scene.frame_set(number_of_frame)
         alf, _ = updateZwkPosition(alf,alfs,home[0],home[1],side,mm)
+        alf2, _ = updateZwkPosition(alf,alfs,home[0],home[1],side,mm)
         # alf = handleColisions(alf,borders,alfs)
-        ani.location = (alf.x_pos,alf.y_pos,0)
-        ani.keyframe_insert(data_path="location", index=-1)
-        print([alf.x_pos,alf.y_pos])
-        number_of_frame += 1
+        ani.location = (alf.y_pos,-alf.x_pos,0)
+        aa = alf.angle
+        #blender_angle = 2 * alf.angle / np.pi
+        blender_angle = np.radians(aa) 
+        ani.rotation_euler = (np.pi/2, 0, blender_angle) 
+        ani.keyframe_insert(data_path="location", frame=it)
+        ani.keyframe_insert(data_path="rotation_euler", frame = it)
+        #print([alf.x_pos,alf.y_pos])
+        print(f'frame {number_of_frame}, we got alf angle of {aa} and for blender it is  {blender_angle}')
+        number_of_frame += 10
