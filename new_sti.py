@@ -8,6 +8,7 @@ from mathutils import Vector
 import moomodel
 #test
 
+
 """
 Updates position of all Zwierzaks.
 They generally like to cluster, if they are suitably far away
@@ -34,33 +35,26 @@ class Stickle:
         self.init_pos=init_pos
         self.pos=init_pos
         self.prev_pos=init_pos
-        self.angle = [0,0] #angle[0] alpha, angle[1] beta
+        self.angle = [0.,0.] #angle[0] alpha, angle[1] beta
         self.islong = 30 #half of width and height as opencv ellipses measurements defined
         self.iswide = 10
-
-        #unusual numbers to encourage program loudly crashing
-        self.topleft = -111
-        self.bottomright = -111
-        self.topleft_prev = -111
-        self.bottomright_prev = -111
-
 
 # useful shortcut
 scene = bpy.context.scene
 
-side = 5
+side = 2.5
 
 number_of_frame = 0
 scene.frame_set(number_of_frame)
 ani = bpy.data.objects['hemingway']
 ani.rotation_mode = 'XYZ'
-ani.location=(0,0,0)
-ani.rotation_euler = (np.pi/2, 0, 0) 
+ani.location=(0.,0.,0.)
+ani.rotation_euler = (np.pi/2, 0., np.pi/2) 
 ani.keyframe_insert(data_path="location", index=-1)
 ani.keyframe_insert(data_path="rotation_euler", index=-1)
 number_of_frame += 1
 
-init_pos = [0,0,0]
+init_pos = [0.,0.,0.]
 stickle = Stickle('s',init_pos)
 
 
@@ -71,22 +65,26 @@ mu_s  = 0
 #theta_angular_velocity = 0.1
 sigma_speed = 0.3
 theta_speed = 0.001
-sigma_angular_velocity = 1
-theta_angular_velocity = 0.01
+sigma_angular_velocity = 0.1
+theta_angular_velocity = 0.1
 
 
 mm = moomodel.Mooveemodel(init_pos, mu_s, sigma_speed,sigma_angular_velocity,theta_speed, theta_angular_velocity, border='normal',side=side)
+print('STARTTTTTTTT')
+print('STARTTTTTTTT')
+print('STARTTTTTTTT')
+print('STARTTTTTTTT')
 
-
-for it in range(1,2500,10):
+for it in range(1,25000,10):
     scene.frame_set(number_of_frame)
     stickle = updateSticklePosition(stickle,mm)
     # alf = handleColisions(alf,borders,alfs)
-    ani.location = (stickle.pos[1],0,-stickle.pos[0])
+    print(stickle.pos)
+    ani.location = (stickle.pos[1],0,stickle.pos[0])#x,y,z = 
     aa = stickle.angle[0]
     #blender_angle = 2 * alf.angle / np.pi
     blender_angle = np.radians(aa) 
-    ani.rotation_euler = (np.pi/2, 0, blender_angle) 
+    ani.rotation_euler = (blender_angle, 0, np.pi/2) 
     ani.keyframe_insert(data_path="location", frame=it)
     ani.keyframe_insert(data_path="rotation_euler", frame = it)
     #print([alf.x_pos,alf.y_pos])

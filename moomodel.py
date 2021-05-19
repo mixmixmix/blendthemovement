@@ -7,13 +7,13 @@ class Mooveemodel:
         self.mu = np.array([mu_s,0.])
         self.theta = np.array([theta_speed,theta_angular_velocity])
         self.sigma = np.array([sigma_speed,sigma_angular_velocity])
-        self.v = np.array([0,0,0])
+        self.v = np.array([0.,0.,0.])
         self.dt = np.ones(3)
         self.rng = np.random.default_rng()
         self.pos = np.array(init_pos)
         self.angle = 30. #alpha angle
         self.os = np.array(self.mu)
-        self.s = 0
+        self.s = 0.
         self.border = border
 
         if border:
@@ -29,21 +29,23 @@ class Mooveemodel:
 
     #The "normal" boundary condition is a hack on the output angle of the movement model, it accelerates the turn of angle without feeding in to the model
     def borderRepulsionVector(self):
-        dist_low = -self.side + self.pos[1]
-        dist_high = self.side - self.pos[1]
-        dist_left = -self.side + self.pos[0]
-        dist_right = self.side - self.pos[0]
+        dist_low = self.side + self.pos[0]
+        dist_high = self.side - self.pos[0]
+        dist_left = self.side + self.pos[1]
+        dist_right = self.side - self.pos[1]
 
-        mag = 0.1
-        # print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
+        mag = 10
+        print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
         force_low = 1 / (1+math.exp(mag*(dist_low-self.bdist)))
         force_high = 1 / (1+math.exp(mag*(dist_high-self.bdist)))
         force_left = 1 / (1+math.exp(mag*(dist_left-self.bdist)))
         force_right = 1 / (1+math.exp(mag*(dist_right-self.bdist)))
-        # print(f' The forceances are {force_low} {force_high}, {force_left}, {force_right}')
+        print(f' The forceances are {force_low} {force_high}, {force_left}, {force_right}')
 
         #add vectors:
-        return np.array([force_left-force_right, force_low-force_high])
+        #return np.array([force_left-force_right, force_low-force_high])
+        #blender
+        return np.array([force_low-force_high, force_left-force_right])
 
 
     def updateSpeed(self):
@@ -70,12 +72,12 @@ class Mooveemodel:
             inv[0] = np.cos(self.angle)
             inv[1] = np.sin(self.angle)
             brv = self.borderRepulsionVector()
-            # print(f'Repulsion! {brv}')
+            print(f'Repulsion! {brv}')
             ouv [0] = inv[0] + brv[0]
             ouv [1] = inv[1] + brv[1]
-            # print(f'vector inv: {inv}')
-            # print(f'vector brv: {brv}')
-            # print(f'vector ouv: {ouv}')
+            print(f'vector inv: {inv}')
+            print(f'vector brv: {brv}')
+            print(f'vector ouv: {ouv}')
             self.angle = np.arctan2(ouv[1],ouv[0])
 
         # print(f'post angle {self.angle}')
