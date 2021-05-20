@@ -5,7 +5,7 @@ from collections import deque
 import numpy as np #remember to add to sys.path proper python libs
 import bpy
 from mathutils import Vector
-import moomodel
+import moomodel #sys.path.append('/home/mix/repos/blendthemovement
 #test
 
 
@@ -42,7 +42,9 @@ class Stickle:
 # useful shortcut
 scene = bpy.context.scene
 
-side = 2.5
+#side = [-2.5,2.5,-5.2,-0.2] #those are middle of the tank3
+side = [-2.5,2.5,0.2,5.2]
+
 
 number_of_frame = 0
 scene.frame_set(number_of_frame)
@@ -85,7 +87,7 @@ for it in range(1,2500,sampling):
     aa = stickle.angle[0]
     #blender_angle = 2 * alf.angle / np.pi
     blender_angle = np.radians(aa) 
-    print(mm.v)
+    #print(mm.v)
     #ani.rotation_euler = (blender_angle, 0, np.pi/2) 
     if mm.v[0] > 0:
         blender_angle = 3 * np.pi/8
@@ -94,7 +96,7 @@ for it in range(1,2500,sampling):
 
     if mm.v[1] > 0.3:
         mdir =1
-    if mm.v[1] <-0.3:
+    if mm.v[1] < -0.3:
         mdir = -1
         
     #blender_angle = np.pi/2    
@@ -102,6 +104,6 @@ for it in range(1,2500,sampling):
     ani.keyframe_insert(data_path="location", frame=it)
     ani.keyframe_insert(data_path="rotation_euler", frame = it)
     #print([alf.x_pos,alf.y_pos])
-    print(f'frame {number_of_frame}, we got alf angle of {aa} and for blender it is  {blender_angle}')
+    #print(f'frame {number_of_frame}, we got alf angle of {aa} and for blender it is  {blender_angle}')
     number_of_frame += sampling
     fwave = fwave * -1

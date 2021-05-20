@@ -29,13 +29,14 @@ class Mooveemodel:
 
     #The "normal" boundary condition is a hack on the output angle of the movement model, it accelerates the turn of angle without feeding in to the model
     def borderRepulsionVector(self):
-        dist_low = self.side + self.pos[0]
-        dist_high = self.side - self.pos[0]
-        dist_left = self.side + self.pos[1]
-        dist_right = self.side - self.pos[1]
+        #side = [low, high, left, right]
+        dist_low =  self.pos[0] - self.side[0]
+        dist_high = self.side[1] - self.pos[0]
+        dist_left = self.pos[1] - self.side[2]
+        dist_right = self.side[3] - self.pos[1]
 
         mag = 10
-        # print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
+        #print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
         force_low = 1 / (1+math.exp(mag*(dist_low-self.bdist)))
         force_high = 1 / (1+math.exp(mag*(dist_high-self.bdist)))
         force_left = 1 / (1+math.exp(mag*(dist_left-self.bdist)))
@@ -95,7 +96,7 @@ class Mooveemodel:
             self.pos = new_pos
             return self.pos
         elif self.border=='periodic':
-            self.pos = new_pos % self.side
+            self.pos = new_pos % (self.side[1] - self.side[0]) # hack assume it is a cube
             is_same_panel = True if np.all(new_pos == self.pos) else False
             return self.pos, is_same_panel
         elif self.border=='normal':
