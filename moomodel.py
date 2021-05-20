@@ -35,12 +35,12 @@ class Mooveemodel:
         dist_right = self.side - self.pos[1]
 
         mag = 10
-        print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
+        # print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
         force_low = 1 / (1+math.exp(mag*(dist_low-self.bdist)))
         force_high = 1 / (1+math.exp(mag*(dist_high-self.bdist)))
         force_left = 1 / (1+math.exp(mag*(dist_left-self.bdist)))
         force_right = 1 / (1+math.exp(mag*(dist_right-self.bdist)))
-        print(f' The forceances are {force_low} {force_high}, {force_left}, {force_right}')
+        # print(f' The forceances are {force_low} {force_high}, {force_left}, {force_right}')
 
         #add vectors:
         #return np.array([force_left-force_right, force_low-force_high])
@@ -72,12 +72,12 @@ class Mooveemodel:
             inv[0] = np.cos(self.angle)
             inv[1] = np.sin(self.angle)
             brv = self.borderRepulsionVector()
-            print(f'Repulsion! {brv}')
+            # print(f'Repulsion! {brv}')
             ouv [0] = inv[0] + brv[0]
             ouv [1] = inv[1] + brv[1]
-            print(f'vector inv: {inv}')
-            print(f'vector brv: {brv}')
-            print(f'vector ouv: {ouv}')
+            # print(f'vector inv: {inv}')
+            # print(f'vector brv: {brv}')
+            # print(f'vector ouv: {ouv}')
             self.angle = np.arctan2(ouv[1],ouv[0])
 
         # print(f'post angle {self.angle}')

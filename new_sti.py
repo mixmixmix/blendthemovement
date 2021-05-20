@@ -64,29 +64,44 @@ mu_s  = 0
 #theta_speed = 0.1
 #theta_angular_velocity = 0.1
 sigma_speed = 0.3
-theta_speed = 0.001
-sigma_angular_velocity = 0.1
+theta_speed = 0.5
+sigma_angular_velocity = 0.2
 theta_angular_velocity = 0.1
-
+fwave = 0.2
+mdir = 1
 
 mm = moomodel.Mooveemodel(init_pos, mu_s, sigma_speed,sigma_angular_velocity,theta_speed, theta_angular_velocity, border='normal',side=side)
 print('STARTTTTTTTT')
 print('STARTTTTTTTT')
 print('STARTTTTTTTT')
 print('STARTTTTTTTT')
-
-for it in range(1,25000,10):
+sampling = 5
+for it in range(1,2500,sampling):
     scene.frame_set(number_of_frame)
     stickle = updateSticklePosition(stickle,mm)
     # alf = handleColisions(alf,borders,alfs)
-    print(stickle.pos)
+    #print(stickle.pos)
     ani.location = (stickle.pos[1],0,stickle.pos[0])#x,y,z = 
     aa = stickle.angle[0]
     #blender_angle = 2 * alf.angle / np.pi
     blender_angle = np.radians(aa) 
-    ani.rotation_euler = (blender_angle, 0, np.pi/2) 
+    print(mm.v)
+    #ani.rotation_euler = (blender_angle, 0, np.pi/2) 
+    if mm.v[0] > 0:
+        blender_angle = 3 * np.pi/8
+    if mm.v[0] < 0:
+        blender_angle = 5*np.pi/8
+
+    if mm.v[1] > 0.3:
+        mdir =1
+    if mm.v[1] <-0.3:
+        mdir = -1
+        
+    #blender_angle = np.pi/2    
+    ani.rotation_euler = (blender_angle, 0, mdir * np.pi/(2 + fwave)) 
     ani.keyframe_insert(data_path="location", frame=it)
     ani.keyframe_insert(data_path="rotation_euler", frame = it)
     #print([alf.x_pos,alf.y_pos])
     print(f'frame {number_of_frame}, we got alf angle of {aa} and for blender it is  {blender_angle}')
-    number_of_frame += 10
+    number_of_frame += sampling
+    fwave = fwave * -1
