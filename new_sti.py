@@ -42,21 +42,37 @@ class Stickle:
 # useful shortcut
 scene = bpy.context.scene
 
-#side = [-2.5,2.5,-5.2,-0.2] #those are middle of the tank3
-side = [-2.5,2.5,0.2,5.2]
+
+
 
 
 number_of_frame = 0
 scene.frame_set(number_of_frame)
-ani = bpy.data.objects['hemingway']
+ani = bpy.data.objects['hemingway_benth'] 
+#ani = bpy.data.objects['hemingway_mbd'] 
+
+side = [-2.5,2.5,1,5.2]
+start_x=3.
+start_z=3.
+ani.location=(start_x,0.,start_z)
+init_pos = [start_z,start_x,0]
+
+#ani = bpy.data.objects['block'] 
+#side = [-2.5,2.5,-5.2,-1] #those are middle of the tank3
+#start_x=-3.
+#start_z=-3.
+#ani.location=(start_x,0.,start_z)
+#init_pos = [start_z,start_x,0]
+
+
 ani.rotation_mode = 'XYZ'
-ani.location=(0.,0.,0.)
+
 ani.rotation_euler = (np.pi/2, 0., np.pi/2) 
-ani.keyframe_insert(data_path="location", index=-1)
+ani.keyframe_insert(data_path="location", index=-1)  
 ani.keyframe_insert(data_path="rotation_euler", index=-1)
 number_of_frame += 1
 
-init_pos = [0.,0.,0.]
+
 stickle = Stickle('s',init_pos)
 
 
