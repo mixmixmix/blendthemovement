@@ -48,21 +48,21 @@ scene = bpy.context.scene
 
 number_of_frame = 0
 scene.frame_set(number_of_frame)
-ani = bpy.data.objects['hemingway_benth'] 
-#ani = bpy.data.objects['hemingway_mbd'] 
 
-side = [-2.5,2.5,1,5.2]
-start_x=3.
-start_z=3.
-ani.location=(start_x,0.,start_z)
-init_pos = [start_z,start_x,0]
-
-#ani = bpy.data.objects['block'] 
-#side = [-2.5,2.5,-5.2,-1] #those are middle of the tank3
-#start_x=-3.
-#start_z=-3.
+#ani = bpy.data.objects['hemingway_benth'] 
+##ani = bpy.data.objects['hemingway_mbd'] 
+#side = [-2.5,2.5,1,5.2]
+#start_x=7.
+#start_z=2.
 #ani.location=(start_x,0.,start_z)
 #init_pos = [start_z,start_x,0]
+
+ani = bpy.data.objects['block'] 
+side = [-2.5,2.5,-5.2,-1] #those are middle of the tank3
+start_x=-7.
+start_z=-2.
+ani.location=(start_x,0.,start_z)
+init_pos = [start_z,start_x,0]
 
 
 ani.rotation_mode = 'XYZ'
@@ -94,7 +94,7 @@ print('STARTTTTTTTT')
 print('STARTTTTTTTT')
 print('STARTTTTTTTT')
 sampling = 5
-for it in range(1,2500,sampling):
+for it in range(1,7500,sampling):
     scene.frame_set(number_of_frame)
     stickle = updateSticklePosition(stickle,mm)
     # alf = handleColisions(alf,borders,alfs)

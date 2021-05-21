@@ -36,7 +36,7 @@ class Mooveemodel:
         dist_right = self.side[3] - self.pos[1]
 
         mag = 10
-        print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
+        #print(f' The distances are {dist_low} {dist_high}, {dist_left}, {dist_right}')
         force_low = 1 / (1+math.exp(mag*(dist_low-self.bdist)))
         force_high = 1 / (1+math.exp(mag*(dist_high-self.bdist)))
         force_left = 1 / (1+math.exp(mag*(dist_left-self.bdist)))
